@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin login</title>
+  <style>
+    body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0f0f0f;font-family:"Segoe UI",sans-serif}
+    form{background:#fff;padding:32px;border-radius:20px;width:min(340px,90vw)}
+    h1{margin:0 0 6px;font-size:1.4rem}
+    p{margin:0 0 18px;color:#666;font-size:.9rem}
+    input{width:100%;padding:13px;border:1.5px solid #ddd;border-radius:12px;font-size:1rem;box-sizing:border-box}
+    button{width:100%;margin-top:14px;padding:14px;border:0;border-radius:999px;background:#FFD60A;font-weight:700;font-size:1rem;cursor:pointer}
+    .err{color:#b3261e;font-size:.9rem;margin-top:10px;min-height:1.2em}
+  </style>
+</head>
+<body>
+  <form method="post">
+    <h1>Admin login</h1>
+    <p>Namba Ooru Express</p>
+    <input type="password" name="password" placeholder="Password" autofocus required>
+    <button type="submit">Login</button>
+    <div class="err">{{ error }}</div>
+  </form>
+</body>
+</html>

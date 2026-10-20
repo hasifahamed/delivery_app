@@ -1,0 +1,86 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orders | Admin</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;background:#fbfaf3;font-family:"Segoe UI",sans-serif;color:#111}
+    header{background:#0f0f0f;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+    header b{color:#FFD60A}
+    header a{color:#ccc;text-decoration:none;font-size:.9rem}
+    main{max-width:1100px;margin:0 auto;padding:20px}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px}
+    .stat{background:#fff;border:1px solid #e6e3d4;border-radius:16px;padding:16px}
+    .stat small{color:#6b6b63;display:block}
+    .stat b{font-size:1.6rem}
+    .stat.y{background:#FFD60A;border-color:#FFD60A}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+    .tabs a{padding:8px 16px;border-radius:999px;background:#fff;border:1px solid #e6e3d4;text-decoration:none;color:#111;font-size:.9rem}
+    .tabs a.on{background:#111;color:#fff;border-color:#111}
+    .wrapt{overflow-x:auto;background:#fff;border:1px solid #e6e3d4;border-radius:16px}
+    table{width:100%;border-collapse:collapse;min-width:820px}
+    th,td{padding:12px 14px;text-align:left;border-bottom:1px solid #eee;vertical-align:top;font-size:.92rem}
+    th{background:#f5f3e8;font-size:.8rem}
+    .code{font-weight:700}
+    .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:700}
+    .New{background:#fff1b8}.Picked{background:#cfe8ff}.Delivered{background:#c9f0d6}.Cancelled{background:#f6d0cd}
+    select,button{font:inherit;padding:7px 10px;border-radius:10px;border:1px solid #ccc}
+    button{background:#111;color:#fff;border-color:#111;cursor:pointer}
+    .empty{padding:30px;text-align:center;color:#6b6b63}
+  </style>
+</head>
+<body>
+<header>
+  <span><b>Namba Ooru</b> Admin</span>
+  <a href="{{ url_for('admin_logout') }}">Logout</a>
+</header>
+<main>
+  <div class="stats">
+    {% for s in statuses %}
+    <div class="stat"><small>{{ s }}</small><b>{{ counts[s] }}</b></div>
+    {% endfor %}
+    <div class="stat y"><small>Earned (Delivered)</small><b>₹{{ earned }}</b></div>
+  </div>
+
+  <div class="tabs">
+    <a href="{{ url_for('admin') }}" class="{{ 'on' if not selected }}">All</a>
+    {% for s in statuses %}
+    <a href="{{ url_for('admin', status=s) }}" class="{{ 'on' if selected == s }}">{{ s }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="wrapt">
+    {% if orders %}
+    <table>
+      <tr><th>Order</th><th>Customer</th><th>Pickup to Drop</th><th>Item</th><th>Km / Fee</th><th>Status</th><th>Update</th></tr>
+      {% for o in orders %}
+      <tr>
+        <td><span class="code">{{ o.code }}</span><br><small>{{ o.created_at }}</small></td>
+        <td>{{ o.name or "-" }}</td>
+        <td>{{ o.pickup }}<br>to {{ o.drop_loc }}</td>
+        <td>{{ o.item }}</td>
+        <td>{{ o.km }} km<br><b>₹{{ o.fee }}</b></td>
+        <td><span class="pill {{ o.status.split()[0] }}">{{ o.status }}</span></td>
+        <td>
+          <form method="post" action="{{ url_for('admin_status', order_id=o.id) }}">
+            <select name="status">
+              {% for s in statuses %}
+              <option value="{{ s }}" {{ 'selected' if s == o.status }}>{{ s }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit">Save</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <div class="empty">No orders here yet.</div>
+    {% endif %}
+  </div>
+</main>
+</body>
+</html>
